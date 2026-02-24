@@ -8,54 +8,64 @@
   "engines": {
     "vscode": "^1.85.0"
   },
-  "categories": ["Other"],
-  "keywords": ["browser", "preview", "webview", "localhost", "devtools"],
-  "activationEvents": ["onStartupFinished"],
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "browser",
+    "preview",
+    "webview",
+    "localhost",
+    "devtools"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "antigravity-webview.open",
+        "command": "vscode-browser-tab.open",
         "title": "Open Browser Tab",
-        "category": "Antigravity",
+        "category": "Browser Tab",
         "icon": "$(globe)"
       },
       {
-        "command": "antigravity-webview.navigate",
+        "command": "vscode-browser-tab.navigate",
         "title": "Open URL in Browser Tab",
-        "category": "Antigravity",
+        "category": "Browser Tab",
         "icon": "$(search)"
       }
     ],
     "menus": {
       "editor/title": [
         {
-          "command": "antigravity-webview.open",
+          "command": "vscode-browser-tab.open",
           "group": "navigation"
         }
       ]
     },
     "keybindings": [
       {
-        "command": "antigravity-webview.open",
+        "command": "vscode-browser-tab.open",
         "key": "ctrl+shift+b",
         "mac": "cmd+shift+b"
       }
     ],
     "configuration": {
-      "title": "Antigravity Browser",
+      "title": "Browser Tab",
       "properties": {
-        "antigravity-webview.defaultUrl": {
+        "vscode-browser-tab.defaultUrl": {
           "type": "string",
           "default": "http://localhost:3000",
           "description": "Default URL to open when the browser tab is launched."
         },
-        "antigravity-webview.autoReload": {
+        "vscode-browser-tab.autoReload": {
           "type": "boolean",
           "default": true,
           "description": "Automatically reload the browser tab when a workspace file is saved."
         },
-        "antigravity-webview.hmrAware": {
+        "vscode-browser-tab.hmrAware": {
           "type": "boolean",
           "default": true,
           "description": "Skip full-page auto-reload for file types handled by HMR tools (Vite, webpack, etc.). JS, TS, CSS, Vue, Svelte files will not trigger a reload — HMR handles those live."
@@ -67,12 +77,14 @@
     "vscode:prepublish": "node .esbuild.mjs --minify",
     "build": "node .esbuild.mjs",
     "watch": "node .esbuild.mjs --watch",
-    "package": "npx @vscode/vsce package"
+    "package": "npx @vscode/vsce package",
+    "release": "standard-version"
   },
   "devDependencies": {
-    "@types/vscode": "^1.85.0",
     "@types/node": "^20.0.0",
-    "typescript": "^5.3.0",
-    "esbuild": "^0.20.0"
+    "@types/vscode": "^1.85.0",
+    "esbuild": "^0.20.0",
+    "standard-version": "^9.5.0",
+    "typescript": "^5.3.0"
   }
 }

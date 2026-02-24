@@ -10,7 +10,7 @@ const HMR_EXTENSIONS = new Set([
 
 export class BrowserPanel {
   public static currentPanel: BrowserPanel | undefined;
-  private static readonly viewType = 'antigravityBrowser';
+  private static readonly viewType = 'vscodeBrowserTab';
 
   private readonly _panel: vscode.WebviewPanel;
   private readonly _context: vscode.ExtensionContext;
@@ -32,7 +32,7 @@ export class BrowserPanel {
       return;
     }
 
-    const config = vscode.workspace.getConfiguration('antigravity-webview');
+    const config = vscode.workspace.getConfiguration('vscode-browser-tab');
     const defaultUrl = url ?? config.get<string>('defaultUrl', 'http://localhost:3000');
 
     const panel = vscode.window.createWebviewPanel(
@@ -109,7 +109,7 @@ export class BrowserPanel {
     // ── HMR-aware auto-reload on file save ────────────────────────────────
     vscode.workspace.onDidSaveTextDocument(
       (doc) => {
-        const cfg = vscode.workspace.getConfiguration('antigravity-webview');
+        const cfg = vscode.workspace.getConfiguration('vscode-browser-tab');
         if (!cfg.get<boolean>('autoReload', true)) { return; }
 
         const ext = this._fileExt(doc.fileName);
@@ -156,12 +156,12 @@ export class BrowserPanel {
   <meta http-equiv="Content-Security-Policy"
     content="default-src 'none';
              style-src ${webview.cspSource} 'unsafe-inline';
-             script-src 'nonce-${nonce}';
+              script-src 'nonce-${nonce}';
              frame-src *;
              img-src * data:;
              connect-src *;">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Antigravity Browser</title>
+  <title>Browser Tab</title>
   <link rel="stylesheet" href="${cssUri}" />
 </head>
 <body>

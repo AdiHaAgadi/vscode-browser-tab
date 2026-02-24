@@ -1,0 +1,78 @@
+{
+  "name": "vscode-browser-tab",
+  "displayName": "Browser Tab",
+  "description": "Embedded browser panel inside VS Code.",
+  "version": "0.1.0",
+  "publisher": "AdiHaAgadi",
+  "icon": "media/icon.png",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": ["Other"],
+  "keywords": ["browser", "preview", "webview", "localhost", "devtools"],
+  "activationEvents": ["onStartupFinished"],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "antigravity-webview.open",
+        "title": "Open Browser Tab",
+        "category": "Antigravity",
+        "icon": "$(globe)"
+      },
+      {
+        "command": "antigravity-webview.navigate",
+        "title": "Open URL in Browser Tab",
+        "category": "Antigravity",
+        "icon": "$(search)"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "antigravity-webview.open",
+          "group": "navigation"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "antigravity-webview.open",
+        "key": "ctrl+shift+b",
+        "mac": "cmd+shift+b"
+      }
+    ],
+    "configuration": {
+      "title": "Antigravity Browser",
+      "properties": {
+        "antigravity-webview.defaultUrl": {
+          "type": "string",
+          "default": "http://localhost:3000",
+          "description": "Default URL to open when the browser tab is launched."
+        },
+        "antigravity-webview.autoReload": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically reload the browser tab when a workspace file is saved."
+        },
+        "antigravity-webview.hmrAware": {
+          "type": "boolean",
+          "default": true,
+          "description": "Skip full-page auto-reload for file types handled by HMR tools (Vite, webpack, etc.). JS, TS, CSS, Vue, Svelte files will not trigger a reload — HMR handles those live."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "node .esbuild.mjs --minify",
+    "build": "node .esbuild.mjs",
+    "watch": "node .esbuild.mjs --watch",
+    "package": "npx @vscode/vsce package"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.85.0",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.3.0",
+    "esbuild": "^0.20.0"
+  }
+}

@@ -30,6 +30,9 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.window.registerTerminalLinkProvider({
       provideTerminalLinks(ctx, _token) {
+        const cfg = vscode.workspace.getConfiguration('vscode-browser-tab');
+        if (!cfg.get<boolean>('terminalLinks', true)) { return []; }
+
         const URL_REGEX = /https?:\/\/[^\s"'`\]>),;]+/g;
         const links: vscode.TerminalLink[] = [];
         let m: RegExpExecArray | null;

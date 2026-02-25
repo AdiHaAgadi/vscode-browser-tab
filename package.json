@@ -50,6 +50,11 @@
         "command": "vscode-browser-tab.open",
         "key": "ctrl+shift+b",
         "mac": "cmd+shift+b"
+      },
+      {
+        "command": "vscode-browser-tab.navigate",
+        "key": "ctrl+shift+l",
+        "mac": "cmd+shift+l"
       }
     ],
     "configuration": {
@@ -69,6 +74,11 @@
           "type": "boolean",
           "default": true,
           "description": "Skip full-page auto-reload for file types handled by HMR tools (Vite, webpack, etc.). JS, TS, CSS, Vue, Svelte files will not trigger a reload — HMR handles those live."
+        },
+        "vscode-browser-tab.terminalLinks": {
+          "type": "boolean",
+          "default": true,
+          "description": "When enabled, clicking a URL in the terminal opens it in the Browser Tab. When disabled, URLs open in the system browser instead."
         }
       }
     }

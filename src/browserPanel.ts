@@ -45,6 +45,7 @@ export class BrowserPanel {
         localResourceRoots: [
           vscode.Uri.joinPath(context.extensionUri, 'media'),
         ],
+        // Map common dev ports from extension host to webview
         portMapping: [
           { webviewPort: 3000, extensionHostPort: 3000 },
           { webviewPort: 4000, extensionHostPort: 4000 },
@@ -66,7 +67,7 @@ export class BrowserPanel {
 
   // ── Constructor ────────────────────────────────────────────────────────────
 
-  private constructor(
+  private constructor (
     panel: vscode.WebviewPanel,
     context: vscode.ExtensionContext,
     defaultUrl: string

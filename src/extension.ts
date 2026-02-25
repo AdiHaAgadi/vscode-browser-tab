@@ -25,7 +25,7 @@ export function activate(context: vscode.ExtensionContext) {
       BrowserPanel.createOrShow(context, normalizeUrl(input));
     }),
   );
-
+//
   // ── Terminal link provider ─────────────────────────────────────────────────
   context.subscriptions.push(
     vscode.window.registerTerminalLinkProvider({

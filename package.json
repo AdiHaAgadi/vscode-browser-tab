@@ -77,7 +77,12 @@
         },
         "vscode-browser-tab.consoleOutput": {
           "type": "string",
-          "enum": ["all", "warn", "error", "none"],
+          "enum": [
+            "all",
+            "warn",
+            "error",
+            "none"
+          ],
           "enumDescriptions": [
             "Show all messages (log, info, debug, warn, error)",
             "Show warnings and errors only",
@@ -104,14 +109,18 @@
     "vscode:prepublish": "node .esbuild.mjs --minify",
     "build": "node .esbuild.mjs",
     "watch": "node .esbuild.mjs --watch",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
     "package": "npx @vscode/vsce package",
     "release": "standard-version"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
     "@types/vscode": "^1.85.0",
+    "@vitest/coverage-v8": "^4.0.18",
     "esbuild": "^0.20.0",
     "standard-version": "^9.5.0",
-    "typescript": "^5.3.0"
+    "typescript": "^5.3.0",
+    "vitest": "^4.0.18"
   }
 }

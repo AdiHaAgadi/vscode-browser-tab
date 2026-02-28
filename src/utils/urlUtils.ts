@@ -8,7 +8,8 @@ export const HMR_EXTENSIONS = new Set([
 ]);
 
 /** Hostnames considered "localhost" for proxy routing. */
-const LOCALHOST_HOSTS = new Set(['localhost', '127.0.0.1', '::1']);
+const LOCALHOST_HOSTS = new Set(['localhost', '127.0.0.1', '::1', '[::1]']);
+
 
 /** Returns true if the URL resolves to a local dev server. */
 export function isLocalhostUrl(url: string): boolean {

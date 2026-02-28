@@ -1,7 +1,7 @@
 "use strict";
 (() => {
   // src/utils/urlUtils.ts
-  var LOCALHOST_HOSTS = /* @__PURE__ */ new Set(["localhost", "127.0.0.1", "::1"]);
+  var LOCALHOST_HOSTS = /* @__PURE__ */ new Set(["localhost", "127.0.0.1", "::1", "[::1]"]);
   function isLocalhostUrl(url) {
     try {
       return LOCALHOST_HOSTS.has(new URL(url).hostname);

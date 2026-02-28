@@ -191,10 +191,33 @@ export class BrowserPanel {
             ];
             const sourceClasses = classes.filter(c => !SKIP.some(r => r.test(c)));
 
+            // Strip common bundler / CSS-Modules hash suffixes to recover the source name.
+            // Key heuristic: a "hash" contains at least one letter-digit or digit-letter pair
+            // (looks random, e.g. qgp7o, fx12g3, 2xK9b) — unlike semantic words (primary, active).
+            //   container_qgp7o_1   → container   (hash + counter)
+            //   __container__fx12g3 → container   (double-underscore wrapped)
+            //   container__2xK9b    → container   (CSS Modules)
+            //   container_primary   → unchanged   (semantic word, no digit mix)
+            function stripHash(cls: string): string {
+              let s = cls.replace(/^_+/, ''); // strip leading underscores
+              // Match a hash suffix: separator (_ or --) + alphanumeric segment that mixes
+              // letters AND digits + optional _NUMBER counter at the end
+              s = s.replace(
+                /(?:_+|-{2,})[a-zA-Z0-9]*(?:[a-zA-Z][0-9]|[0-9][a-zA-Z])[a-zA-Z0-9]*(?:_\d+)?$/,
+                '',
+              );
+              return (s && s !== cls) ? s : cls;
+            }
+
             const terms = [
               ...(id ? [{ label: `$(search) Search for #${id}`, term: id }] : []),
-              ...sourceClasses.map(c => ({ label: `$(search) Search for .${c}`, term: c })),
-              // Always show filtered classes at the bottom with a warning
+              ...sourceClasses.map(c => {
+                const clean = stripHash(c);
+                return clean !== c
+                  ? { label: `$(search) Search for .${clean}`, term: clean, description: c }
+                  : { label: `$(search) Search for .${c}`,     term: c };
+              }),
+              // Framework-generated classes at the bottom with a warning
               ...classes
                 .filter(c => SKIP.some(r => r.test(c)))
                 .map(c => ({ label: `$(warning) ${c}  (framework-generated, unlikely in source)`, term: c })),

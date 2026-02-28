@@ -75,6 +75,23 @@
           "default": true,
           "description": "Skip full-page auto-reload for file types handled by HMR tools (Vite, webpack, etc.). JS, TS, CSS, Vue, Svelte files will not trigger a reload — HMR handles those live."
         },
+        "vscode-browser-tab.consoleOutput": {
+          "type": "string",
+          "enum": ["all", "warn", "error", "none"],
+          "enumDescriptions": [
+            "Show all messages (log, info, debug, warn, error)",
+            "Show warnings and errors only",
+            "Show errors only",
+            "Disable console mirroring"
+          ],
+          "default": "all",
+          "description": "Minimum log level to mirror from the active localhost page to the 'Browser Tab — Console' Output Channel."
+        },
+        "vscode-browser-tab.networkInspector": {
+          "type": "boolean",
+          "default": true,
+          "description": "Log fetch and XHR requests from the active localhost page to the 'Browser Tab — Network' Output Channel."
+        },
         "vscode-browser-tab.terminalLinks": {
           "type": "boolean",
           "default": true,

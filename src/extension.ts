@@ -1,7 +1,8 @@
 import * as vscode from "vscode";
 import { BrowserPanel } from "./browserPanel";
-import { normalizeUrl } from "./browserPanel";
 import { DevProxy } from "./devProxy";
+import { normalizeUrl } from "./utils/urlUtils";
+
 
 export async function activate(context: vscode.ExtensionContext) {
 

@@ -96,6 +96,7 @@ window.addEventListener('message', (event) => {
   }
 
   const handler = messageHandlers[msg.type];
+  
   if (handler) {
     handler(msg);
   }

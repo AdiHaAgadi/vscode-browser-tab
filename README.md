@@ -1,7 +1,7 @@
 # Browser Tab
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/AdiHaAgadi/vscode-browser-tab/main/media/icon.png" width="128" alt="Browser Tab Icon" />
+  <img src="media/icon.png" width="128" alt="Browser Tab Icon" />
 </p>
 
 An embedded browser panel right inside VS Code. Stop switching windows and start previewing your workspace instantly!

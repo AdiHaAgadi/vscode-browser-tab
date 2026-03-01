@@ -1,7 +1,11 @@
 node_modules/
-out/
 dist/
+
+out/
+out-test/
+coverage/
 .vscode-test/
+
 *.vsix
 *.log
 .DS_Store

@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "module": "CommonJS",
+    "target": "ES2020",
+    "lib": ["ES2020"],
+    "strict": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "outDir": "out-test",
+    "rootDir": ".",
+    "sourceMap": true,
+    "resolveJsonModule": true,
+    "types": ["mocha", "node"]
+  },
+  "include": [
+    "test/integration/**/*.ts",
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "src/webview"
+  ]
+}

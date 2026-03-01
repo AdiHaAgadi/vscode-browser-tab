@@ -294,6 +294,26 @@ button:hover .tooltip {
   color: var(--text-muted);
 }
 
+/* Inspect button */
+#btn-inspect {
+  color: var(--text-muted);
+  position: relative;
+}
+
+#btn-inspect.active {
+  color: #f0b429;
+  background: rgba(240, 180, 41, 0.12);
+}
+
+#btn-inspect.active:hover {
+  background: rgba(240, 180, 41, 0.2);
+}
+
+/* When inspect mode is active, show a crosshair on the whole panel */
+body.inspect-active {
+  cursor: crosshair;
+}
+
 /* ── Viewport ─────────────────────────────────────── */
 #browser-viewport {
   position: absolute;

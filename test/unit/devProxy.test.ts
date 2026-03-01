@@ -4,6 +4,8 @@ import { DevProxy } from '../../src/devProxy';
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
+const LOCALHOST_IP = '127.0.0.1';
+
 /** Spin up a tiny HTTP server that always returns the given body + content-type. */
 function fakeServer(body: string, contentType: string): Promise<{ server: http.Server; port: number }> {
   return new Promise((resolve) => {
@@ -11,7 +13,7 @@ function fakeServer(body: string, contentType: string): Promise<{ server: http.S
       res.writeHead(200, { 'content-type': contentType });
       res.end(body);
     });
-    server.listen(0, '127.0.0.1', () => {
+    server.listen(0, LOCALHOST_IP, () => {
       resolve({ server, port: (server.address() as any).port });
     });
   });
@@ -20,7 +22,7 @@ function fakeServer(body: string, contentType: string): Promise<{ server: http.S
 /** Fire a GET request through the proxy and return the body as a string. */
 function getThrough(proxyPort: number, path = '/'): Promise<string> {
   return new Promise((resolve, reject) => {
-    http.get(`http://127.0.0.1:${proxyPort}${path}`, (res) => {
+    http.get(`http://${LOCALHOST_IP}:${proxyPort}${path}`, (res) => {
       const chunks: Buffer[] = [];
       res.on('data', (c: Buffer) => chunks.push(c));
       res.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
@@ -31,7 +33,7 @@ function getThrough(proxyPort: number, path = '/'): Promise<string> {
 /** Fire a GET request and return the full response (status + body). */
 function getResponse(proxyPort: number, path = '/'): Promise<{ status: number; body: string }> {
   return new Promise((resolve, reject) => {
-    http.get(`http://127.0.0.1:${proxyPort}${path}`, (res) => {
+    http.get(`http://${LOCALHOST_IP}:${proxyPort}${path}`, (res) => {
       const chunks: Buffer[] = [];
       res.on('data', (c: Buffer) => chunks.push(c));
       res.on('end', () => resolve({ status: res.statusCode ?? 0, body: Buffer.concat(chunks).toString('utf8') }));
@@ -65,7 +67,7 @@ describe('DevProxy', () => {
 
     const proxy = await DevProxy.create();
     proxies.push(proxy);
-    proxy.setTarget(`http://127.0.0.1:${port}`);
+    proxy.setTarget(`http://${LOCALHOST_IP}:${port}`);
 
     const body = await getThrough(proxy.port);
     expect(body).toContain('__bt_console');          // part of DEVTOOLS_SCRIPT
@@ -79,7 +81,7 @@ describe('DevProxy', () => {
 
     const proxy = await DevProxy.create();
     proxies.push(proxy);
-    proxy.setTarget(`http://127.0.0.1:${port}`);
+    proxy.setTarget(`http://${LOCALHOST_IP}:${port}`);
 
     const body = await getThrough(proxy.port);
     expect(body).toContain('data-bt-devtools="1"');
@@ -93,7 +95,7 @@ describe('DevProxy', () => {
 
     const proxy = await DevProxy.create();
     proxies.push(proxy);
-    proxy.setTarget(`http://127.0.0.1:${port}`);
+    proxy.setTarget(`http://${LOCALHOST_IP}:${port}`);
 
     const body = await getThrough(proxy.port);
     expect(body).toBe(jsonBody);
@@ -104,7 +106,7 @@ describe('DevProxy', () => {
     const proxy = await DevProxy.create();
     proxies.push(proxy);
     // Point at a port nothing is listening on
-    proxy.setTarget('http://127.0.0.1:1');
+    proxy.setTarget(`http://${LOCALHOST_IP}:1`);
 
     const { status } = await getResponse(proxy.port);
     expect(status).toBe(502);
@@ -118,11 +120,11 @@ describe('DevProxy', () => {
     const proxy = await DevProxy.create();
     proxies.push(proxy);
 
-    proxy.setTarget(`http://127.0.0.1:${p1}`);
+    proxy.setTarget(`http://${LOCALHOST_IP}:${p1}`);
     const body1 = await getThrough(proxy.port);
     expect(body1).toContain('server1');
 
-    proxy.setTarget(`http://127.0.0.1:${p2}`);
+    proxy.setTarget(`http://${LOCALHOST_IP}:${p2}`);
     const body2 = await getThrough(proxy.port);
     expect(body2).toContain('server2');
   });

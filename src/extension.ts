@@ -68,6 +68,7 @@ export async function activate(context: vscode.ExtensionContext) {
       },
     }),
   );
+  return { context };
 }
 
 export function deactivate() {}

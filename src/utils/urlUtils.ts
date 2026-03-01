@@ -22,7 +22,7 @@ export function isLocalhostUrl(url: string): boolean {
  */
 export function normalizeUrl(url: string): string {
   url = url.trim();
-  if (!url) { return 'about:blank'; }
+  // if (!url) { return 'about:blank'; }
   if (!/^[a-z][a-z\d+\-.]*:\/\//i.test(url)) { url = 'http://' + url; }
   return url;
 }

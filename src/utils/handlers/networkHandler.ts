@@ -12,7 +12,17 @@ export function handleNetworkRequest(msg: Record<string, any>, channel: vscode.O
 export function handleNetworkResponse(msg: Record<string, any>, channel: vscode.OutputChannel) {
   if (!vscode.workspace.getConfiguration('vscode-browser-tab').get<boolean>('networkInspector', true)) { return; }
   const s: number = msg.status ?? 0;
-  const icon = s === 0 ? '✗' : s >= 200 && s < 300 ? '✓' : s >= 400 ? '✗' : '○';
+  const icon = getStatusIcon(s);
   const statusText = s === 0 ? 'FAILED (aborted/CORS/network error)' : `${s} ${msg.statusText ?? ''}`;
   channel.appendLine(`${ts()} ${icon} ${statusText} ← ${msg.url}`);
+}
+
+function getStatusIcon(status: number): string {
+  if (status === 0 || status >= 400) {
+    return '✗';
+  }
+  if (status >= 200 && status < 300) {
+    return '✓';
+  }
+  return '○';
 }

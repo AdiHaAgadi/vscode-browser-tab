@@ -62,6 +62,29 @@ el.frame.addEventListener('load', () => {
 
 // ── Messages from extension host / iframe ────────────────────────────────────
 
+const messageHandlers: Record<string, (msg: Record<string, any>) => void> = {
+  loadUrl: (msg) => {
+    if (msg.url) {
+      hideBlockedBanner();
+      hideErrorPage();
+      startLoading();
+      if (msg.proxyOrigin) { state.proxyOrigin    = msg.proxyOrigin; }
+      if (msg.realUrl)     { state.currentRealUrl = msg.realUrl; syncUI(msg.realUrl); }
+      el.frame.src = msg.url;
+    }
+  },
+  reload: () => {
+    if (state.autoReloadEnabled) {
+      refresh();
+      el.statusText.textContent = 'Auto-reloaded';
+      setTimeout(() => { el.statusText.textContent = 'Ready'; }, 2000);
+    }
+  },
+  navigate: (msg) => {
+    if (msg.url) { navigateTo(normalizeUrl(msg.url)); }
+  }
+};
+
 window.addEventListener('message', (event) => {
   const msg = event.data as Record<string, any>;
   if (!msg?.type) { return; }
@@ -72,29 +95,9 @@ window.addEventListener('message', (event) => {
     return;
   }
 
-  switch (msg.type) {
-    case 'loadUrl':
-      if (msg.url) {
-        hideBlockedBanner();
-        hideErrorPage();
-        startLoading();
-        if (msg.proxyOrigin) { state.proxyOrigin    = msg.proxyOrigin; }
-        if (msg.realUrl)     { state.currentRealUrl = msg.realUrl; syncUI(msg.realUrl); }
-        el.frame.src = msg.url;
-      }
-      break;
-
-    case 'reload':
-      if (state.autoReloadEnabled) {
-        refresh();
-        el.statusText.textContent = 'Auto-reloaded';
-        setTimeout(() => { el.statusText.textContent = 'Ready'; }, 2000);
-      }
-      break;
-
-    case 'navigate':
-      if (msg.url) { navigateTo(normalizeUrl(msg.url)); }
-      break;
+  const handler = messageHandlers[msg.type];
+  if (handler) {
+    handler(msg);
   }
 });
 

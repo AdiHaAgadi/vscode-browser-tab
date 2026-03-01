@@ -311,6 +311,37 @@
       frame.contentWindow?.postMessage({ type: "__bt_enable_inspect" }, "*");
     }
   });
+  var messageHandlers = {
+    loadUrl: (msg) => {
+      if (msg.url) {
+        hideBlockedBanner();
+        hideErrorPage();
+        startLoading();
+        if (msg.proxyOrigin) {
+          state.proxyOrigin = msg.proxyOrigin;
+        }
+        if (msg.realUrl) {
+          state.currentRealUrl = msg.realUrl;
+          syncUI(msg.realUrl);
+        }
+        frame.src = msg.url;
+      }
+    },
+    reload: () => {
+      if (state.autoReloadEnabled) {
+        refresh();
+        statusText.textContent = "Auto-reloaded";
+        setTimeout(() => {
+          statusText.textContent = "Ready";
+        }, 2e3);
+      }
+    },
+    navigate: (msg) => {
+      if (msg.url) {
+        navigateTo(normalizeUrl(msg.url));
+      }
+    }
+  };
   window.addEventListener("message", (event) => {
     const msg = event.data;
     if (!msg?.type) {
@@ -320,36 +351,9 @@
       vscode.postMessage(msg);
       return;
     }
-    switch (msg.type) {
-      case "loadUrl":
-        if (msg.url) {
-          hideBlockedBanner();
-          hideErrorPage();
-          startLoading();
-          if (msg.proxyOrigin) {
-            state.proxyOrigin = msg.proxyOrigin;
-          }
-          if (msg.realUrl) {
-            state.currentRealUrl = msg.realUrl;
-            syncUI(msg.realUrl);
-          }
-          frame.src = msg.url;
-        }
-        break;
-      case "reload":
-        if (state.autoReloadEnabled) {
-          refresh();
-          statusText.textContent = "Auto-reloaded";
-          setTimeout(() => {
-            statusText.textContent = "Ready";
-          }, 2e3);
-        }
-        break;
-      case "navigate":
-        if (msg.url) {
-          navigateTo(normalizeUrl(msg.url));
-        }
-        break;
+    const handler = messageHandlers[msg.type];
+    if (handler) {
+      handler(msg);
     }
   });
   btnBack.addEventListener("click", goBack);

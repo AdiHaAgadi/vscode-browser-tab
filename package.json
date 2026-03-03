@@ -4,6 +4,10 @@
   "description": "Embedded browser panel inside VS Code.",
   "version": "0.1.1",
   "publisher": "AdiHaAgadi",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AdiHaAgadi/vscode-browser-tab"
+  },
   "icon": "media/icon.png",
   "engines": {
     "vscode": "^1.85.0"

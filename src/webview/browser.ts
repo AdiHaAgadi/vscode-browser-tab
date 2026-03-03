@@ -30,13 +30,12 @@ el.frame.addEventListener('load', () => {
   stopLoading(); // Only stop after confirming it's not an about:blank pulse
 
   if (detectedUrl && detectedUrl !== 'about:blank') {
-    // Strip internal nonce used to force iframe reload before translating
     if (detectedUrl.includes('_bt_r=')) {
       try {
         const u = new URL(detectedUrl);
         u.searchParams.delete('_bt_r');
         detectedUrl = u.toString();
-      } catch { /* keep as-is */ }
+      } catch {}
     }
     // Translate proxy URL → real URL for the address bar
     if (state.proxyOrigin && detectedUrl.startsWith(state.proxyOrigin) && state.currentRealUrl) {
@@ -44,6 +43,7 @@ el.frame.addEventListener('load', () => {
         const proxyU = new URL(detectedUrl);
         const realU  = new URL(state.currentRealUrl);
         detectedUrl  = realU.origin + proxyU.pathname + proxyU.search + proxyU.hash;
+
         // Keep currentRealUrl in sync so subsequent navigations don't use a stale port
         state.currentRealUrl = detectedUrl;
       } catch { detectedUrl = state.currentRealUrl; }
@@ -84,8 +84,7 @@ const messageHandlers: Record<string, (msg: Record<string, any>) => void> = {
       startLoading();
       if (msg.proxyOrigin) { state.proxyOrigin    = msg.proxyOrigin; }
       if (msg.realUrl)     { state.currentRealUrl = msg.realUrl; syncUI(msg.realUrl); }
-      // The _bt_r nonce in msg.url guarantees it differs from any previous src,
-      // so a plain assignment always triggers a real browser navigation.
+
       el.frame.src = msg.url;
     }
   },

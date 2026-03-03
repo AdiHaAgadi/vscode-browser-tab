@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.2](https://github.com/AdiHaAgadi/vscode-browser-tab/compare/v0.1.1...v0.1.2) (2026-03-03)
+
+
+### Bug Fixes
+
+* fix integration tests not updated with new publisherID ([f0db155](https://github.com/AdiHaAgadi/vscode-browser-tab/commit/f0db155689abbfe881f8b8cf48ec54fe2f643cf1))
+
 ### 0.1.1 (2026-03-03)
 
 

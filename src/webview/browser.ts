@@ -12,26 +12,40 @@ import { applyDevice }    from './device';
 // ── Iframe load ──────────────────────────────────────────────────────────────
 
 el.frame.addEventListener('load', () => {
-  stopLoading();
   let detectedUrl  = '';
   let isCrossOrigin = false;
 
   try {
     detectedUrl = el.frame.contentWindow?.location.href || '';
+    if (detectedUrl === 'about:blank') return; // Ignore intentional proxy-swap pulses
     el.crossBadge.classList.remove('visible');
   } catch {
-    detectedUrl  = state.history[state.historyIdx] || el.frame.src;
+    // Cross-origin access blocked (e.g. proxy serves a 502 error page).
+    // Use the realUrl we last set as the canonical source — it's always current.
+    detectedUrl  = state.currentRealUrl || state.history[state.historyIdx] || el.frame.src;
     isCrossOrigin = true;
     el.crossBadge.classList.add('visible');
   }
 
+  stopLoading(); // Only stop after confirming it's not an about:blank pulse
+
   if (detectedUrl && detectedUrl !== 'about:blank') {
+    if (detectedUrl.includes('_bt_r=')) {
+      try {
+        const u = new URL(detectedUrl);
+        u.searchParams.delete('_bt_r');
+        detectedUrl = u.toString();
+      } catch {}
+    }
     // Translate proxy URL → real URL for the address bar
     if (state.proxyOrigin && detectedUrl.startsWith(state.proxyOrigin) && state.currentRealUrl) {
       try {
         const proxyU = new URL(detectedUrl);
         const realU  = new URL(state.currentRealUrl);
         detectedUrl  = realU.origin + proxyU.pathname + proxyU.search + proxyU.hash;
+
+        // Keep currentRealUrl in sync so subsequent navigations don't use a stale port
+        state.currentRealUrl = detectedUrl;
       } catch { detectedUrl = state.currentRealUrl; }
     }
     if (detectedUrl !== state.history[state.historyIdx]) { state.history[state.historyIdx] = detectedUrl; }
@@ -70,7 +84,20 @@ const messageHandlers: Record<string, (msg: Record<string, any>) => void> = {
       startLoading();
       if (msg.proxyOrigin) { state.proxyOrigin    = msg.proxyOrigin; }
       if (msg.realUrl)     { state.currentRealUrl = msg.realUrl; syncUI(msg.realUrl); }
+
       el.frame.src = msg.url;
+    }
+  },
+  showError: (msg) => {
+    if (msg.url) {
+      const url = msg.url as string;
+      if (state.history[state.historyIdx] !== url) {
+        state.history = state.history.slice(0, state.historyIdx + 1);
+        state.history.push(url);
+        state.historyIdx = state.history.length - 1;
+      }
+      syncUI(url);
+      showErrorPage(url);
     }
   },
   reload: () => {

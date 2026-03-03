@@ -9,11 +9,11 @@
 </p>
 
 <p align="center">
-  <a href="https://marketplace.visualstudio.com/items?itemName=AdiHaAgadi.vscode-browser-tab"><img src="https://img.shields.io/visual-studio-marketplace/v/AdiHaAgadi.vscode-browser-tab.svg?label=VS%20Marketplace" alt="Version"></a>
-  <a href="https://marketplace.visualstudio.com/items?itemName=AdiHaAgadi.vscode-browser-tab"><img src="https://img.shields.io/visual-studio-marketplace/i/AdiHaAgadi.vscode-browser-tab.svg" alt="Installs"></a>
-  <a href="https://github.com/AdiHaAgadi/vscode-browser-tab/actions/workflows/ci.yml"><img src="https://github.com/AdiHaAgadi/vscode-browser-tab/actions/workflows/ci.yml/badge.svg" alt="CI Status"></a>
-  <img src="https://img.shields.io/badge/Coverage-91%25-success.svg" alt="Test Coverage">
-  <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License">
+  <a href="https://marketplace.visualstudio.com/items?itemName=AdiHaAgadi.vscode-browser-tab"><img src="https://img.shields.io/visual-studio-marketplace/v/AdiHaAgadi.vscode-browser-tab?color=e05d44&label=version" alt="VS Marketplace Version"></a>
+  <a href="https://marketplace.visualstudio.com/items?itemName=AdiHaAgadi.vscode-browser-tab"><img src="https://img.shields.io/visual-studio-marketplace/i/AdiHaAgadi.vscode-browser-tab?color=fe7d37&label=installs" alt="VS Marketplace Installs"></a>
+  <a href="https://github.com/AdiHaAgadi/vscode-browser-tab/actions/workflows/ci.yml"><img src="https://github.com/AdiHaAgadi/vscode-browser-tab/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <img src="https://img.shields.io/badge/coverage-91%25-4c1.svg" alt="Test Coverage">
+  <img src="https://img.shields.io/badge/license-MIT-blueviolet.svg" alt="License">
 </p>
 
 ## ✨ Key Features

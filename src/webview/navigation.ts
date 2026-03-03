@@ -59,23 +59,25 @@ export async function navigateTo(url: string) {
 export function goBack() {
   if (state.historyIdx <= 0) { return; }
   state.historyIdx--;
+  // navigateTo will add to history, so pre-decrement and then navigate to existing entry
   const url = state.history[state.historyIdx];
-  hideErrorPage(); hideBlockedBanner(); startLoading(); el.frame.src = url; syncUI(url);
+  // Remove the entry so navigateTo can re-push it correctly at the right index
+  state.history = state.history.slice(0, state.historyIdx);
+  state.historyIdx = state.history.length - 1;
+  navigateTo(url);
 }
 
 export function goForward() {
   if (state.historyIdx >= state.history.length - 1) { return; }
   state.historyIdx++;
   const url = state.history[state.historyIdx];
-  hideErrorPage(); hideBlockedBanner(); startLoading(); el.frame.src = url; syncUI(url);
+  // Remove the entry so navigateTo can re-push it correctly at the right index
+  state.history = state.history.slice(0, state.historyIdx);
+  state.historyIdx = state.history.length - 1;
+  navigateTo(url);
 }
 
 export function refresh() {
   hideErrorPage(); hideBlockedBanner();
-  try { el.frame.contentWindow?.location.reload(); } catch {
-    const cur = el.frame.src;
-    el.frame.src = '';
-    requestAnimationFrame(() => { el.frame.src = cur; });
-  }
-  startLoading();
+  navigateTo(state.history[state.historyIdx] || '');
 }

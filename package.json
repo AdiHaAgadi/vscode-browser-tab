@@ -3,7 +3,7 @@
   "displayName": "Browser Tab",
   "description": "Embedded browser panel inside VS Code.",
   "version": "0.1.2",
-  "publisher": "AdiHaAgadi",
+  "publisher": "AdiEfrat",
   "repository": {
     "type": "git",
     "url": "https://github.com/AdiHaAgadi/vscode-browser-tab"

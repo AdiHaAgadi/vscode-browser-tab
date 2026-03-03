@@ -39,14 +39,22 @@ export class DevProxy {
 
   private _buildServer(): http.Server {
     const server = http.createServer((req, res) => {
-      // Strip accept-encoding so the server sends us uncompressed text we can modify
+      // Strip internal _bt_r nonce and accept-encoding before forwarding
+      let reqPath = req.url || '/';
+      if (reqPath.includes('_bt_r=')) {
+        try {
+          const u = new URL('http://x' + reqPath);
+          u.searchParams.delete('_bt_r');
+          reqPath = u.pathname + u.search;
+        } catch { /* keep original */ }
+      }
       const headers = { ...req.headers, host: `${this._targetHost}:${this._targetPort}` };
       delete headers['accept-encoding'];
 
       const opts: http.RequestOptions = {
         host: this._targetHost,
         port: this._targetPort,
-        path: req.url || '/',
+        path: reqPath,
         method: req.method || 'GET',
         headers,
       };

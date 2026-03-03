@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import * as http from 'http';
 import { DevProxy } from './devProxy';
 import { getPanelHtml } from './utils/panelHtml';
 import { isLocalhostUrl, HMR_EXTENSIONS } from './utils/urlUtils';
@@ -118,21 +119,52 @@ export class BrowserPanel {
   /** Routes localhost URLs through the proxy; passes all others directly to the iframe. */
   private _navigateTo(url: string) {
     this._currentUrl = url;
-    let loadUrl = url;
 
     if (BrowserPanel._proxy && isLocalhostUrl(url)) {
-      BrowserPanel._proxy.setTarget(url);
-      try {
-        const u = new URL(url);
-        loadUrl = `http://localhost:${BrowserPanel._proxy.port}${u.pathname}${u.search}${u.hash}`;
-      } catch { /* keep original url */ }
+      // Ping before proxying so we can show the custom error page instead of
+      // the proxy's raw "Proxy error:" text when the dev server isn't running.
+      BrowserPanel._pingUrl(url).then(reachable => {
+        if (!reachable) {
+          this._panel.webview.postMessage({ type: 'showError', url });
+          return;
+        }
+        BrowserPanel._proxy!.setTarget(url);
+        let loadUrl = url;
+        try {
+          const u = new URL(url);
+          const sep = u.search ? '&' : '?';
+          loadUrl = `http://localhost:${BrowserPanel._proxy!.port}${u.pathname}${u.search}${sep}_bt_r=${Date.now()}${u.hash}`;
+        } catch { /* keep original url */ }
+        this._panel.webview.postMessage({
+          type: 'loadUrl',
+          url: loadUrl,
+          realUrl: url,
+          proxyOrigin: `http://localhost:${BrowserPanel._proxy!.port}`,
+        });
+      });
+    } else {
+      this._panel.webview.postMessage({
+        type: 'loadUrl',
+        url,
+        realUrl: url,
+        proxyOrigin: '',
+      });
     }
+  }
 
-    this._panel.webview.postMessage({
-      type: 'loadUrl',
-      url: loadUrl,
-      realUrl: url,
-      proxyOrigin: BrowserPanel._proxy ? `http://localhost:${BrowserPanel._proxy.port}` : '',
+  /** Quick TCP-level reachability check against a localhost URL (3 s timeout). */
+  private static _pingUrl(url: string): Promise<boolean> {
+    return new Promise(resolve => {
+      try {
+        const { hostname, port } = new URL(url);
+        const req = http.request(
+          { hostname, port: port || 80, path: '/', method: 'HEAD' },
+          () => { req.destroy(); resolve(true); },
+        );
+        req.setTimeout(3000, () => { req.destroy(); resolve(false); });
+        req.on('error', () => resolve(false));
+        req.end();
+      } catch { resolve(false); }
     });
   }
 

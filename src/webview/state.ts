@@ -17,4 +17,6 @@ export const state = {
   proxyOrigin:      '',
   /** The real (user-visible) URL when the iframe is loading through the proxy. */
   currentRealUrl:   '',
-};
+  /** The last proxy URL we explicitly set the iframe src to. */
+  currentProxyUrl:  '',
+}

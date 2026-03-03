@@ -2,7 +2,7 @@ import * as assert from 'assert';
 import * as vscode from 'vscode';
 import { BrowserPanel } from '../../../src/browserPanel';
 
-const EXT_ID = 'AdiHaAgadi.vscode-browser-tab';
+const EXT_ID = 'AdiEfrat.vscode-browser-tab';
 
 suite('BrowserPanel — lifecycle', () => {
   let context: vscode.ExtensionContext;

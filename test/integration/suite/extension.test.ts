@@ -2,7 +2,7 @@ import * as assert from 'assert';
 import * as vscode from 'vscode';
 
 // The extension ID must match package.json "publisher.name"
-const EXT_ID = 'AdiHaAgadi.vscode-browser-tab';
+const EXT_ID = 'AdiEfrat.vscode-browser-tab';
 
 suite('Extension — activate()', () => {
   let ext: vscode.Extension<any>;

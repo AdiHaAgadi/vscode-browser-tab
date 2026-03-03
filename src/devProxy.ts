@@ -46,7 +46,7 @@ export class DevProxy {
           const u = new URL('http://x' + reqPath);
           u.searchParams.delete('_bt_r');
           reqPath = u.pathname + u.search;
-        } catch { /* keep original */ }
+        } catch { }
       }
       const headers = { ...req.headers, host: `${this._targetHost}:${this._targetPort}` };
       delete headers['accept-encoding'];

@@ -134,7 +134,7 @@ export class BrowserPanel {
           const u = new URL(url);
           const sep = u.search ? '&' : '?';
           loadUrl = `http://localhost:${BrowserPanel._proxy!.port}${u.pathname}${u.search}${sep}_bt_r=${Date.now()}${u.hash}`;
-        } catch { /* keep original url */ }
+        } catch {}
         this._panel.webview.postMessage({
           type: 'loadUrl',
           url: loadUrl,
